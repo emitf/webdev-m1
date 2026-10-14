@@ -25,9 +25,12 @@ const timerDisplay = document.querySelector('#timer');
 const pairsDisplay = document.querySelector('#pairs-found');
 const pairTotalDisplay = document.querySelector('#pair-total');
 const messageDisplay = document.querySelector('#game-message');
+const nameInput = document.querySelector('#player-name');
+const leaderboardBody = document.querySelector('#leaderboard-list');
 const startButton = document.querySelector('#start-button');
 const restartButton = document.querySelector('#restart-button');
 
+let attempts = [];
 let cardValues = [];
 let currentLevel = 0;
 let firstCard = null;
@@ -56,6 +59,50 @@ function startTimer() {
   elapsedSeconds = 0;
   timerDisplay.textContent = formatTime(elapsedSeconds);
   timerId = window.setInterval(updateTimer, 1000);
+}
+
+function saveAttempt() {
+  let playerName = nameInput.value.trim();
+  if (playerName === '') playerName = 'Ocean Explorer';
+
+  const attempt = {
+    name: playerName,
+    levels: currentLevel + 1,
+    moves: moveCount,
+    time: elapsedSeconds,
+  };
+
+  attempts.push(attempt);
+  showLeaderboard();
+}
+
+function showLeaderboard() {
+  attempts.sort((firstAttempt, secondAttempt) => {
+    if (firstAttempt.moves !== secondAttempt.moves) {
+      return firstAttempt.moves - secondAttempt.moves;
+    }
+    return firstAttempt.time - secondAttempt.time;
+  });
+
+  leaderboardBody.textContent = '';
+  attempts.forEach((attempt) => {
+    const row = document.createElement('tr');
+    const nameCell = document.createElement('td');
+    const levelsCell = document.createElement('td');
+    const movesCell = document.createElement('td');
+    const timeCell = document.createElement('td');
+
+    nameCell.textContent = attempt.name;
+    levelsCell.textContent = `${attempt.levels} / ${levels.length}`;
+    movesCell.textContent = String(attempt.moves);
+    timeCell.textContent = formatTime(attempt.time);
+
+    row.appendChild(nameCell);
+    row.appendChild(levelsCell);
+    row.appendChild(movesCell);
+    row.appendChild(timeCell);
+    leaderboardBody.appendChild(row);
+  });
 }
 
 function shuffleCards(cardList) {
@@ -179,6 +226,7 @@ function finishLevel() {
     window.clearInterval(timerId);
     gameState = 'finished';
     messageDisplay.textContent = `You completed all three levels in ${moveCount} moves!`;
+    saveAttempt();
     startButton.textContent = 'Play Again';
     restartButton.disabled = true;
     startButton.disabled = false;
