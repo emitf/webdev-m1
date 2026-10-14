@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#082d43">
+    <meta name="description" content="A relaxing underwater memory matching game.">
+    <title>Deep Sea Memory</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="game-page">
+      <header class="page-heading">
+        <p class="eyebrow">AN UNDERWATER MEMORY GAME</p>
+        <h1>Deep Sea <span>Memory</span></h1>
+        <p class="intro">Find every matching sea creature and explore deeper with each level.</p>
+      </header>
+
+      <section class="game-panel" aria-labelledby="game-heading">
+        <div class="game-topline">
+          <div>
+            <p class="eyebrow">CURRENT DIVE</p>
+            <h2 id="game-heading">Level <span id="level-number">1</span> <span class="level-total">/ 4</span></h2>
+          </div>
+          <label class="name-field" for="player-name">
+            <span>YOUR NAME</span>
+            <input id="player-name" name="player-name" type="text" maxlength="18" placeholder="Ocean Explorer">
+          </label>
+        </div>
+
+        <div class="game-stats" aria-label="Run statistics">
+          <div class="stat">
+            <span class="stat-label">TOTAL MOVES</span>
+            <span class="stat-value" id="move-count">0</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">TOTAL TIME</span>
+            <span class="stat-value" id="timer">00:00</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">PAIRS FOUND</span>
+            <span class="stat-value" id="pairs-found">0 <span class="stat-unit">/ 6</span></span>
+          </div>
+        </div>
+
+        <p class="game-message" id="game-message" role="status">Press Start Game when you are ready to dive in.</p>
+
+        <div class="board" id="board" role="group" aria-label="Memory cards, level 1">
+          <button class="memory-card" type="button" data-card="0" aria-label="Card 1, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="1" aria-label="Card 2, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="2" aria-label="Card 3, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="3" aria-label="Card 4, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="4" aria-label="Card 5, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="5" aria-label="Card 6, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="6" aria-label="Card 7, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="7" aria-label="Card 8, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="8" aria-label="Card 9, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="9" aria-label="Card 10, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="10" aria-label="Card 11, face down"><span aria-hidden="true">≈</span></button>
+          <button class="memory-card" type="button" data-card="11" aria-label="Card 12, face down"><span aria-hidden="true">≈</span></button>
+        </div>
+
+        <div class="game-controls">
+          <button class="button button-primary" id="start-button" type="button">Start Game</button>
+          <button class="button button-secondary" id="restart-button" type="button" disabled>Restart</button>
+        </div>
+      </section>
+
+      <section class="leaderboard" aria-labelledby="leaderboard-heading">
+        <div class="leaderboard-heading">
+          <div>
+            <p class="eyebrow">YOUR DIVES</p>
+            <h2 id="leaderboard-heading">Leaderboard</h2>
+          </div>
+          <p class="leaderboard-note">Best runs rise to the top</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">PLAYER</th>
+                <th scope="col">LEVELS</th>
+                <th scope="col">MOVES</th>
+                <th scope="col">TIME</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-list">
+              <tr>
+                <td class="empty-leaderboard" colspan="4">Your completed attempts will appear here.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="page-footer">TAKE A BREATH · FIND THE PAIRS · DIVE DEEPER</footer>
+    </main>
+  </body>
+</html>
