@@ -21,6 +21,7 @@ const board = document.querySelector('#board');
 const cards = Array.from(document.querySelectorAll('.memory-card'));
 const levelDisplay = document.querySelector('#level-number');
 const moveDisplay = document.querySelector('#move-count');
+const timerDisplay = document.querySelector('#timer');
 const pairsDisplay = document.querySelector('#pairs-found');
 const pairTotalDisplay = document.querySelector('#pair-total');
 const messageDisplay = document.querySelector('#game-message');
@@ -33,9 +34,29 @@ let firstCard = null;
 let secondCard = null;
 let moveCount = 0;
 let pairsFound = 0;
+let elapsedSeconds = 0;
 let boardLocked = false;
 let gameState = 'ready';
 let flipBackTimeout;
+let timerId;
+
+function formatTime(totalSeconds) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function updateTimer() {
+  elapsedSeconds += 1;
+  timerDisplay.textContent = formatTime(elapsedSeconds);
+}
+
+function startTimer() {
+  window.clearInterval(timerId);
+  elapsedSeconds = 0;
+  timerDisplay.textContent = formatTime(elapsedSeconds);
+  timerId = window.setInterval(updateTimer, 1000);
+}
 
 function shuffleCards(cardList) {
   for (let index = cardList.length - 1; index > 0; index -= 1) {
@@ -155,6 +176,7 @@ function finishLevel() {
   const isFinalLevel = currentLevel === levels.length - 1;
 
   if (isFinalLevel) {
+    window.clearInterval(timerId);
     gameState = 'finished';
     messageDisplay.textContent = `You completed all three levels in ${moveCount} moves!`;
     startButton.textContent = 'Play Again';
@@ -175,6 +197,7 @@ function startGame() {
   moveCount = 0;
   moveDisplay.textContent = '0';
   startButton.textContent = 'Start Game';
+  startTimer();
   startLevel();
 }
 
