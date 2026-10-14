@@ -217,6 +217,20 @@ h1 span {
   background: linear-gradient(145deg, #1b7085, #15546b);
 }
 
+.memory-card.is-flipped {
+  border-color: var(--sunshine);
+  background: #d5f3ed;
+  color: #073142;
+  cursor: default;
+}
+
+.memory-card.is-matched {
+  border-color: var(--aqua);
+  background: #a9e9dc;
+  color: #073142;
+  cursor: default;
+}
+
 .game-controls {
   display: flex;
   justify-content: center;
