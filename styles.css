@@ -194,6 +194,10 @@ h1 span {
   gap: 10px;
 }
 
+.board.has-five-columns {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
 .memory-card {
   display: grid;
   aspect-ratio: 1.2;
@@ -206,10 +210,6 @@ h1 span {
   cursor: pointer;
   font-size: clamp(25px, 5vw, 38px);
   line-height: 1;
-}
-
-.memory-card span {
-  transform: rotate(-12deg);
 }
 
 .memory-card:hover {
@@ -229,6 +229,15 @@ h1 span {
   background: #a9e9dc;
   color: #073142;
   cursor: default;
+}
+
+.memory-card:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.memory-card[hidden] {
+  display: none;
 }
 
 .game-controls {

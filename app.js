@@ -9,25 +9,32 @@ const creatures = [
   { emoji: '🪼', name: 'jellyfish' },
   { emoji: '🐚', name: 'shell' },
   { emoji: '🦭', name: 'seal' },
-  { emoji: '🦑', name: 'squid' },
-  { emoji: '🪸', name: 'coral' },
 ];
 
-const PAIRS_IN_LEVEL = 6;
-const cards = Array.from(document.querySelectorAll('.memory-card'));
+const levels = [
+  { rows: 3, columns: 4, pairs: 6 },
+  { rows: 4, columns: 4, pairs: 8 },
+  { rows: 4, columns: 5, pairs: 10 },
+];
+
 const board = document.querySelector('#board');
+const cards = Array.from(document.querySelectorAll('.memory-card'));
+const levelDisplay = document.querySelector('#level-number');
 const moveDisplay = document.querySelector('#move-count');
 const pairsDisplay = document.querySelector('#pairs-found');
+const pairTotalDisplay = document.querySelector('#pair-total');
 const messageDisplay = document.querySelector('#game-message');
 const startButton = document.querySelector('#start-button');
 const restartButton = document.querySelector('#restart-button');
 
 let cardValues = [];
+let currentLevel = 0;
 let firstCard = null;
 let secondCard = null;
 let moveCount = 0;
 let pairsFound = 0;
 let boardLocked = false;
+let gameState = 'ready';
 let flipBackTimeout;
 
 function shuffleCards(cardList) {
@@ -57,7 +64,7 @@ function showCard(card) {
 function handleCardClick(event) {
   const clickedCard = event.currentTarget;
 
-  if (boardLocked || clickedCard.classList.contains('is-flipped') || clickedCard.classList.contains('is-matched')) {
+  if (gameState !== 'playing' || boardLocked || clickedCard.classList.contains('is-flipped') || clickedCard.classList.contains('is-matched')) {
     return;
   }
 
@@ -91,7 +98,7 @@ function checkForMatch() {
     firstCard = null;
     secondCard = null;
 
-    if (pairsFound === PAIRS_IN_LEVEL) {
+    if (pairsFound === levels[currentLevel].pairs) {
       finishLevel();
     }
     return;
@@ -105,47 +112,88 @@ function checkForMatch() {
     firstCard = null;
     secondCard = null;
     boardLocked = false;
-    messageDisplay.textContent = 'Find all six pairs to complete this level.';
+    messageDisplay.textContent = `Find all ${levels[currentLevel].pairs} pairs to complete this level.`;
   }, 850);
 }
 
-function finishLevel() {
-  boardLocked = true;
-  messageDisplay.textContent = `Level complete! You found all ${PAIRS_IN_LEVEL} pairs in ${moveCount} moves.`;
-  startButton.textContent = 'Play Again';
-  startButton.disabled = false;
-  restartButton.disabled = true;
-}
-
-function startGame() {
-  window.clearTimeout(flipBackTimeout);
+function startLevel() {
+  const level = levels[currentLevel];
   cardValues = [];
-  for (let index = 0; index < PAIRS_IN_LEVEL; index += 1) {
+  for (let index = 0; index < level.pairs; index += 1) {
     cardValues.push(creatures[index], creatures[index]);
   }
   shuffleCards(cardValues);
+
   firstCard = null;
   secondCard = null;
-  moveCount = 0;
   pairsFound = 0;
   boardLocked = false;
+  gameState = 'playing';
 
-  cards.forEach((card) => {
+  board.classList.toggle('has-five-columns', level.columns === 5);
+  board.setAttribute('aria-label', `Level ${currentLevel + 1}, ${level.rows} rows by ${level.columns} columns`);
+  cards.forEach((card, index) => {
+    card.hidden = index >= cardValues.length;
+    card.disabled = card.hidden;
     card.classList.remove('is-flipped', 'is-matched');
     hideCard(card);
   });
 
-  moveDisplay.textContent = '0';
+  levelDisplay.textContent = String(currentLevel + 1);
   pairsDisplay.textContent = '0';
-  messageDisplay.textContent = 'Find all six pairs to complete this level.';
+  pairTotalDisplay.textContent = String(level.pairs);
+  messageDisplay.textContent = `Find all ${level.pairs} pairs to complete this level.`;
   startButton.disabled = true;
   restartButton.disabled = false;
-  board.setAttribute('aria-label', 'Memory cards, level 1');
+}
+
+function finishLevel() {
+  boardLocked = true;
+  cards.forEach((card) => {
+    card.disabled = true;
+  });
+  const isFinalLevel = currentLevel === levels.length - 1;
+
+  if (isFinalLevel) {
+    gameState = 'finished';
+    messageDisplay.textContent = `You completed all three levels in ${moveCount} moves!`;
+    startButton.textContent = 'Play Again';
+    restartButton.disabled = true;
+    startButton.disabled = false;
+    return;
+  }
+
+  gameState = 'level-complete';
+  messageDisplay.textContent = `Level ${currentLevel + 1} complete! Your total is ${moveCount} moves.`;
+  startButton.textContent = 'Next Level';
+  startButton.disabled = false;
+}
+
+function startGame() {
+  window.clearTimeout(flipBackTimeout);
+  currentLevel = 0;
+  moveCount = 0;
+  moveDisplay.textContent = '0';
+  startButton.textContent = 'Start Game';
+  startLevel();
+}
+
+function startNextLevel() {
+  currentLevel += 1;
+  startButton.textContent = 'Next Level';
+  startLevel();
+}
+
+function handleStartButtonClick() {
+  if (gameState === 'level-complete') {
+    startNextLevel();
+  } else {
+    startGame();
+  }
 }
 
 cards.forEach((card) => {
   card.addEventListener('click', handleCardClick);
 });
-
-startButton.addEventListener('click', startGame);
+startButton.addEventListener('click', handleStartButtonClick);
 restartButton.addEventListener('click', startGame);
