@@ -20,3 +20,5 @@ was unclear. I also verified the code worked correctly after each change, making
 and moving on to the next stage. 
 
 ### Autopsy
+  1. I decided to create the cards dynamically with JavaScript. At first I had the cards hardcoded in the HTML, and was hiding the ones which were not needed. But then I realized that this was too repetitive, and that if I wanted to make more levels or change the amount of pairs, it would require editing the HTML too. Now, the code creates the number of cards each level needs.
+  2. I considered using localStorage so that the leaderboard would still appear after reloading the page. However, I decided to keep the leaderboard attempts only while the page is open because I thought that saving them was not necessary for this exercise. This also lets people have a small competition and quickly reset the leaderboard by reloading the page.
