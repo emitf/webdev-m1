@@ -18,7 +18,7 @@ const levels = [
 ];
 
 const board = document.querySelector('#board');
-const cards = Array.from(document.querySelectorAll('.memory-card'));
+let cards = [];
 const levelDisplay = document.querySelector('#level-number');
 const moveDisplay = document.querySelector('#move-count');
 const timerDisplay = document.querySelector('#timer');
@@ -149,6 +149,24 @@ function handleCardClick(event) {
   checkForMatch();
 }
 
+function createCards(pairCount, disabled) {
+  board.textContent = '';
+  cards = [];
+  const cardCount = pairCount * 2;
+
+  for (let index = 0; index < cardCount; index += 1) {
+    const card = document.createElement('button');
+    card.className = 'memory-card';
+    card.type = 'button';
+    card.dataset.card = String(index);
+    card.disabled = disabled;
+    card.textContent = '≈';
+    card.addEventListener('click', handleCardClick);
+    board.appendChild(card);
+    cards.push(card);
+  }
+}
+
 function checkForMatch() {
   const firstIndex = Number(firstCard.dataset.card);
   const secondIndex = Number(secondCard.dataset.card);
@@ -200,12 +218,7 @@ function startLevel() {
 
   board.classList.toggle('has-five-columns', level.columns === 5);
   board.setAttribute('aria-label', `Level ${currentLevel + 1}, ${level.rows} rows by ${level.columns} columns`);
-  cards.forEach((card, index) => {
-    card.hidden = index >= cardValues.length;
-    card.disabled = card.hidden;
-    card.classList.remove('is-flipped', 'is-matched');
-    hideCard(card);
-  });
+  createCards(level.pairs, false);
 
   levelDisplay.textContent = String(currentLevel + 1);
   pairsDisplay.textContent = '0';
@@ -263,8 +276,6 @@ function handleStartButtonClick() {
   }
 }
 
-cards.forEach((card) => {
-  card.addEventListener('click', handleCardClick);
-});
+createCards(levels[0].pairs, true);
 startButton.addEventListener('click', handleStartButtonClick);
 restartButton.addEventListener('click', startGame);
