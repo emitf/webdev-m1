@@ -12,9 +12,9 @@ const creatures = [
 ];
 
 const levels = [
+  { rows: 2, columns: 4, pairs: 4 },
   { rows: 3, columns: 4, pairs: 6 },
   { rows: 4, columns: 4, pairs: 8 },
-  { rows: 4, columns: 5, pairs: 10 },
 ];
 
 const board = document.querySelector('#board');
