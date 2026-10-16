@@ -279,3 +279,9 @@ function handleStartButtonClick() {
 createCards(levels[0].pairs, true);
 startButton.addEventListener('click', handleStartButtonClick);
 restartButton.addEventListener('click', startGame);
+
+document.addEventListener('keydown', (event) => {
+  if (event.key.toLowerCase() === 'n' && event.target !== nameInput) {
+    document.body.classList.toggle('night-mode');
+  }
+});

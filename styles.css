@@ -21,6 +21,16 @@ body {
   font-family: var(--sans);
 }
 
+body.night-mode {
+  --ocean: #020b16;
+  --panel: #071827;
+  --line: #17384a;
+  --paper: #dcebf1;
+  --muted: #90a8b6;
+  --aqua: #61c7c4;
+  --sunshine: #d4b967;
+}
+
 button, input { font: inherit; }
 
 .game-page { width: 90%; max-width: 760px; margin: 0 auto; padding: 40px 0 20px; }
